@@ -1,6 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
-
+import { IonicPage, NavController, NavParams, AlertController  } from 'ionic-angular';
+import { AngularFireAuth } from 'angularfire2/auth';
+import { HomePage } from '../home/home'
 /**
  * Generated class for the LoginPage page.
  *
@@ -19,8 +20,17 @@ export class LoginPage {
   @ViewChild('password') password;
 
   
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(private alertCtrl:AlertController,private auth: AngularFireAuth,public navCtrl: NavController, public navParams: NavParams) {
   }
+
+  alert(message: string) {
+    this.alertCtrl.create({
+      title: 'Info!',
+      subTitle: message,
+      buttons: ['OK']
+    }).present();
+  }
+
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad LoginPage');
@@ -29,6 +39,15 @@ export class LoginPage {
   signIn()
   {
     console.log(this.username.value, this.password.value);
+    this.auth.auth.signInWithEmailAndPassword(this.username.value, this.password.value)
+    .then(response => {
+      console.log("Success");
+      this.navCtrl.setRoot(HomePage);
+    }).catch((error) => {
+      alert(error.message);
+    });
+    
   }
+
 
 }
