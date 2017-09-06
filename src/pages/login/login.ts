@@ -39,7 +39,7 @@ export class LoginPage {
   signIn()
   {
     console.log(this.username.value, this.password.value);
-    this.auth.auth.signInWithEmailAndPassword(this.username.value, this.password.value)
+    this.auth.auth.signInWithEmailAndPassword(this.username.value+"@ncr.com", this.password.value)
     .then(response => {
       console.log("Success");
       this.navCtrl.setRoot(HomePage);

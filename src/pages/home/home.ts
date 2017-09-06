@@ -1,5 +1,17 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
+import { AngularFireDatabase , FirebaseListObservable, FirebaseObjectObservable } from 'angularfire2/database';
+import { Cab } from '../../models/cabs';
+import { Geolocation } from '@ionic-native/geolocation';
+import { AngularFireAuth } from 'angularfire2/auth';
+
+
+export interface GPS
+{
+  latitude:string;
+  longitude:string;
+}
+
 
 @Component({
   selector: 'page-home',
@@ -7,8 +19,65 @@ import { NavController } from 'ionic-angular';
 })
 export class HomePage {
 
-  constructor(public navCtrl: NavController) {
+  cabs: FirebaseListObservable<Cab[]>;  
+  gpsItem ={} as GPS;
+  interval:any;
 
+
+  constructor(private auth: AngularFireAuth,private geolocation: Geolocation,public afd:AngularFireDatabase, public navCtrl: NavController) 
+  {
+  }
+
+  getKey()
+  {
+    var key;
+    var user = this.auth.auth.currentUser;
+    var cabref = this.afd.database.ref('/cabs').orderByChild('number').equalTo(user.email.split("@",1)[0]);
+    
+    cabref.on("value", function(snapshot)
+    {
+      key =  Object.keys(snapshot.val())[0].toString();
+      console.log("getKey:"+Object.keys(snapshot.val())[0].toString());
+    });
+    return key;
+  }
+
+  addLocation(location)
+  {
+
+    console.log("addLocation:"+this.getKey());
+    //this.afd.list('/cabs/'+"-KtIEwj_SYqJA-Jit1Hc").set("geolocation", location);
+    this.afd.list('/cabs/'+this.getKey()).set("geolocation", location);
+  }
+
+  startTrip()
+  {
+    
+    this.interval = setInterval(()=>{
+      this.geolocation.getCurrentPosition().then((position) => {
+        console.log("Latitude"+ position.coords.latitude);
+        console.log("Longitude"+ position.coords.longitude);
+        this.gpsItem.latitude = position.coords.latitude.toString();
+        this.gpsItem.longitude = position.coords.longitude.toString();        
+        });
+        this.addLocation(this.gpsItem);
+    }, 5000);
+
+
+  }
+
+  endTrip()
+  {
+    console.log("endTrip");
+    clearInterval(this.interval);
+  }
+
+
+  signOut() 
+  {
+    console.log("signout");
+    clearInterval(this.interval);
+    this.auth.auth.signOut();
   }
 
 }
