@@ -52,7 +52,7 @@ export class HomePage {
 
   startTrip()
   {
-    
+    console.log("Start trip");
     this.interval = setInterval(()=>{
       this.geolocation.getCurrentPosition().then((position) => {
         console.log("Latitude"+ position.coords.latitude);
