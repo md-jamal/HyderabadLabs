@@ -26,7 +26,8 @@ export class HomePage {
   gpsItem ={} as GPS;
   interval:any;
   //watchposition:any;
-
+  startbtndisabled = false;
+  endbtndisabled = true;
 
   constructor(private auth: AngularFireAuth,private geolocation: Geolocation,public afd:AngularFireDatabase, public navCtrl: NavController) 
   {
@@ -57,7 +58,8 @@ export class HomePage {
 
   startTrip()
   {
-
+    this.startbtndisabled = true;
+    this.endbtndisabled = false;
     console.log("Start trip");
     alert("Trip Started.");
     /*this.watchposition = this.geolocation.watchPosition().subscribe((position)=>{
@@ -87,6 +89,8 @@ export class HomePage {
     console.log("endTrip");
     clearInterval(this.interval);
     alert("Trip End Successfully.");
+    this.startbtndisabled = false;
+    this.endbtndisabled = true;
     //this.watchposition.unsubscribe();
   }
 
