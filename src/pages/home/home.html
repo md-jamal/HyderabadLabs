@@ -5,12 +5,13 @@
     </ion-title>
   </ion-navbar>
 </ion-header>
-<ion-buttons end>
-  <button ion-button icon-only (click)="signOut()">
-    <ion-icon name="power"></ion-icon>
-  </button>
-</ion-buttons>
+
 <ion-content padding>
   <button ion-button color="primary" (click)="startTrip()">Start Trip</button>
   <button ion-button color="light" (click)="endTrip()">End Trip</button>
+  <ion-buttons end>
+    <button ion-button icon-only (click)="signOut()">
+      <ion-icon name="power"></ion-icon>
+    </button>
+  </ion-buttons>
 </ion-content>

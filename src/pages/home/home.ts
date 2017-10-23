@@ -1,9 +1,11 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
-import { AngularFireDatabase , FirebaseListObservable, FirebaseObjectObservable } from 'angularfire2/database';
+//import { AngularFireDatabase , FirebaseListObservable, FirebaseObjectObservable } from 'angularfire2/database';
+import { AngularFireDatabase } from 'angularfire2/database';
 import { Cab } from '../../models/cabs';
 import { Geolocation } from '@ionic-native/geolocation';
 import { AngularFireAuth } from 'angularfire2/auth';
+import { Observable } from 'rxjs/Observable';
 
 
 export interface GPS
@@ -19,9 +21,11 @@ export interface GPS
 })
 export class HomePage {
 
-  cabs: FirebaseListObservable<Cab[]>;  
+  //cabs: FirebaseListObservable<Cab[]>;
+  cabs: Observable<Cab[]>;  
   gpsItem ={} as GPS;
   interval:any;
+  //watchposition:any;
 
 
   constructor(private auth: AngularFireAuth,private geolocation: Geolocation,public afd:AngularFireDatabase, public navCtrl: NavController) 
@@ -32,7 +36,7 @@ export class HomePage {
   {
     var key;
     var user = this.auth.auth.currentUser;
-    var cabref = this.afd.database.ref('/cabs').orderByChild('number').equalTo(user.email.split("@",1)[0]);
+    var cabref = this.afd.app.database().ref('/cabs').orderByChild('number').equalTo(user.email.split("@",1)[0]);
     
     cabref.on("value", function(snapshot)
     {
@@ -46,14 +50,26 @@ export class HomePage {
   {
 
     console.log("addLocation:"+this.getKey());
+    //this.afd.list('/cabs/'+this.getKey()).push({"geolocation":location});
     //this.afd.list('/cabs/'+"-KtIEwj_SYqJA-Jit1Hc").set("geolocation", location);
     this.afd.list('/cabs/'+this.getKey()).set("geolocation", location);
   }
 
   startTrip()
   {
+
     console.log("Start trip");
+    alert("Trip Started.");
+    /*this.watchposition = this.geolocation.watchPosition().subscribe((position)=>{
+      console.log("Latitude"+ position.coords.latitude);
+      console.log("Longitude"+ position.coords.longitude);
+      this.gpsItem.latitude = position.coords.latitude.toString();
+      this.gpsItem.longitude = position.coords.longitude.toString();
+      this.addLocation(this.gpsItem);
+    });*/
+    
     this.interval = setInterval(()=>{
+      
       this.geolocation.getCurrentPosition().then((position) => {
         console.log("Latitude"+ position.coords.latitude);
         console.log("Longitude"+ position.coords.longitude);
@@ -70,6 +86,8 @@ export class HomePage {
   {
     console.log("endTrip");
     clearInterval(this.interval);
+    alert("Trip End Successfully.");
+    //this.watchposition.unsubscribe();
   }
 
 
@@ -77,7 +95,9 @@ export class HomePage {
   {
     console.log("signout");
     clearInterval(this.interval);
+    //this.watchposition.unsubscribe();
     this.auth.auth.signOut();
+    alert("You have signout Successfully.");
   }
 
 }
