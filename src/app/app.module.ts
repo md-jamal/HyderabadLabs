@@ -5,7 +5,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
 import { AngularFireModule } from 'angularfire2';
 import { AngularFireAuthModule } from 'angularfire2/auth';
-import {AngularFireDatabaseModule} from 'angularfire2/database';
+import {AngularFireDatabaseModule} from 'angularfire2/database-deprecated';
 import { Geolocation } from '@ionic-native/geolocation';
 
 import { MyApp } from './app.component';
