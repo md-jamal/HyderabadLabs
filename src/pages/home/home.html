@@ -3,12 +3,18 @@
     <ion-title>
       Home
     </ion-title>
+    <ion-buttons end>
+        <button ion-button icon-only (click)="signOut()">
+          <ion-icon name="power"></ion-icon>
+        </button>
+      </ion-buttons>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
   <button ion-button color="primary" (click)="startTrip()" [disabled]="startbtndisabled">Start Trip</button>
   <button ion-button color="light" (click)="endTrip()" [disabled]="endbtndisabled">End Trip</button>
+  <div style="height: 100%; width: 100%; position:absolute;" #mapCanvas id="map_canvas"></div>
   <ion-buttons end>
     <button ion-button icon-only (click)="signOut()">
       <ion-icon name="power"></ion-icon>
